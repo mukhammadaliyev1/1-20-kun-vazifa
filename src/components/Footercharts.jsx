@@ -1,73 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import http from '../axios';
 
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Legend,
-} from 'recharts';
+import React, { useEffect, useState } from 'react'
+import { RadialBarChart, RadialBar } from 'recharts'
+import http from '../axios'
 
-const HalfMoonChart = () => {
-    const [dates, setDates] = useState([]);
-    const [colors, setColors] = useState(['#28a745', '#d3d3d3']); 
+const CompetencyChart = () => {
+  const [dates, setDates] = useState([])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await http.get("competence");
-                console.log(data.data);
-                setDates(data.data);
-                
-                if (data.data.colors) {
-                    setColors(data.data.colors);  
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        
-        fetchData();
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await http.get("competence")
+        console.log(data.data)
+        setDates(data.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    
+    fetchData()
+  }, [])
 
-   
-    const dating = dates.map((value, index) => ({
-        name: value.label,
-        value: value.percentage,
-        color: colors[index % colors.length], 
-    }));
+  const getFillColor = (percentage) => {
+    if (percentage >= 90) return "#0066cc" // Blue for high values
+    if (percentage >= 80) return "#28a745" // Green
+    if (percentage >= 60) return "#28a745" // Green
+    if (percentage >= 40) return "#ffa500" // Orange
+    return "#dc3545" // Red for low values
+  }
 
-    return (
-        <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-                <Pie
-                    data={dating}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="50%"
-                    outerRadius="80%"
-                    startAngle={90}
-                    endAngle={-270}
-                    paddingAngle={5}
-                    dataKey="value"
-                >
-                    {dating.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />  
-                    ))}
-                </Pie>
-                <Legend
-                    iconSize={10}
-                    layout="vertical"
-                    verticalAlign="middle"
-                    align="right"
+  return (
+    <div className="w-full max-w-4xl mx-auto p-4">
+    
+
+    
+      <div className="flex flex-wrap gap-4 justify-between">
+        {dates.map((item, index) => (
+          <div
+            key={index}
+            className="w-[calc(33%-1rem)] min-w-[150px] flex flex-col items-center"
+          >
+            <div className="relative w-32 h-32">
+              <RadialBarChart
+                width={128}
+                height={128}
+                cx="50%"
+                cy="50%"
+                innerRadius="70%"
+                outerRadius="100%"
+                barSize={10}
+                startAngle={180}
+                endAngle={-180}
+                data={[
+                  {
+                    name: item.label,
+                    value: item.percentage,
+                    fill: getFillColor(item.percentage)
+                  }
+                ]}
+              >
+                <RadialBar
+                  background
+                  dataKey="value"
+                  cornerRadius={5}
                 />
-            </PieChart>
-           
+              </RadialBarChart>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                <p className="text-2xl font-bold">{item.percentage}%</p>
+              </div>
+            </div>
+            <p className="mt-2 text-center text-sm">{item.label}</p>
+          </div>
+        ))}
+      </div>
+    
+    </div>
+  )
+}
 
-        </ResponsiveContainer>
-         
-    );
-};
-
-export default HalfMoonChart;
+export default CompetencyChart

@@ -12,7 +12,7 @@ import qrcode from './assets/Frame 879.svg'
 
 const App = () => {
   return (
-    <div>
+    <div className='mx-auto'>
       <Header/>
       <Main/>
 <div>
@@ -24,16 +24,20 @@ const App = () => {
 
 <div className='flex max-w-[1440px] items-center  mx-auto'>
 <ChartComponent/>
-<Chartcomp3/>
-<ChartComponent1/>
+{/* <Chartcomp3/>
+<ChartComponent1/> */}
 </div>
       <Section/>
 
 
-
+      <h2 className="text-4xl mt-10  font-bold flex gap-2.5">
+        <p className="w-3 h-10 bg-blue-800"></p>
+        Компетенцияларнинг намоён бўлиши
+      </h2>
 <div className='flex mx-auto'>
-<img width={100} height={300} src={qrcode} alt="" />
+  
 <Footercharts/>
+<img width={400} height={1000} src={qrcode} alt="" />
 
 </div>
 
