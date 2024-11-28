@@ -1,151 +1,32 @@
-// import React, { useEffect, useState } from "react";
-// import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-// import http from "../axios";
+import React, { useState, useEffect } from "react";
+import lord from "../axios"; 
 
+const ProgressBar = ({ label, value }) => {
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between text-sm font-medium text-gray-700">
+        <span>{label}</span>
+        <span>{value}%</span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-3">
+        <div
+          className="bg-blue-600 h-3 rounded-full"
+          style={{ width: `${value}%` }}
+        ></div> 
+      </div>
+    </div>
+  );
+};
 
-// const ChartComponent = () => {
-//   const [datas, setdata] = useState([])
-//   useEffect(()=>{
-//     http.get('professional')
-//     .then(data =>{
-//       const limitedData = data.data.percents.slice(0, 4);
-//       setdata(limitedData)
-//     })
-//     .catch(err =>{
-//       console.log(err);
-      
-//     })
-//   },[])
-
-  
-//   const chartdatas = datas.map((value) => ({
-//     name: value.label, 
-//     value: value.percentage, 
-//   }));
-
-//   return (
-//     <div style={{ width: "100%", height: 300 }}>
-//            <ResponsiveContainer>
-//         <BarChart
-//           data={chartdatas}
-//           layout="vertical"
-//           margin={{ top: 100, right: 30, left: 20, bottom: 20 }}
-//         >
-//           <CartesianGrid strokeDasharray="3 3" />
-//           <XAxis type="number" domain={[0, 100]} />
-//           <YAxis type="category" dataKey="name" width={200} />
-//           <Tooltip />
-//           <Bar dataKey="value" fill="#00468b" />
-//         </BarChart>
-//       </ResponsiveContainer>
-//     </div>
-//   );
-// };
-
-// export default ChartComponent;
-
-
-
-
-
-// import React, { useEffect, useState } from "react"
-// import {
-//   Radar,
-//   RadarChart,
-//   PolarGrid,
-//   PolarAngleAxis,
-//   PolarRadiusAxis,
-//   ResponsiveContainer
-// } from "recharts"
-// import http from "../axios"
-
-// const RadarChartComponent = () => {
-//   const [datas, setdata] = useState([])
-
-//   useEffect(() => {
-//     http.get("professional")
-//       .then((data) => {
-//         const limitedData = data.data.percents.slice(0, 5)
-//         setdata(limitedData)
-//       })
-//       .catch((err) => {
-//         console.log(err)
-//       })
-//   }, [])
-
-//   const chartdatas = datas.map((value) => ({
-//     subject: value.label,
-//     value: value.percentage,
-//     fullMark: 100
-//   }))
-
-//   return (
-//     <div className="w-full max-w-5xl mx-auto">
-    
-//       <div className="mb-8" style={{ width: "100%", height: 400 }}>
-//         <ResponsiveContainer>
-//           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartdatas}>
-//             <PolarGrid stroke="#e2e8f0" />
-//             <PolarAngleAxis
-//               dataKey="subject"
-//               tick={{ fill: "#1e293b", fontSize: 12 }}
-//               style={{ fontWeight: 500 }}
-//             />
-//             <PolarRadiusAxis
-//               angle={90}
-//               domain={[0, 100]}
-//               axisLine={false}
-//               tick={{ fontSize: 12 }}
-//             />
-//             <Radar
-//               dataKey="value"
-//               stroke="#2563eb"
-//               fill="#3b82f6"
-//               fillOpacity={0.4}
-//             />
-//           </RadarChart>
-//         </ResponsiveContainer>
-//       </div>
-//       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-//         {chartdatas.map((item, index) => (
-//           <div key={index} className="flex items-center justify-between gap-2 p-2">
-//             <span>{item.subject}</span>
-//             <span className="font-bold">{item.value}%</span>
-//           </div>
-//         ))}
-//       </div>
-//       <h2 className="text-2xl font-bold mt-12 mb-4">Психологик диагностика</h2>
-//     </div>
-//   )
-// }
-
-// export default RadarChartComponent
-
-
-
-
-
-import React, { useEffect, useState } from "react";
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-} from "recharts";
-import http from "../axios";
-
-const RadarChartComponent = () => {
+const ProgressChart = () => {
   const [datas, setdata] = useState([]);
-  const [loading, setLoading] = useState(true); // Yangi state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    http
+    lord
       .get("professional")
-      .then((data) => {
-        console.log("Ma'lumotlar:", data.data); // Ma'lumotlarni tekshirish
-        const limitedData = data.data.percents.slice(0, 5);
+      .then((response) => {
+        const limitedData = response.data.percents.slice(0, 8); 
         setdata(limitedData);
         setLoading(false);
       })
@@ -155,65 +36,25 @@ const RadarChartComponent = () => {
       });
   }, []);
 
-  const chartdatas = datas.map((value) => ({
-    subject: value.label,
-    value: value.percentage,
-    fullMark: 100,
-  }));
-
   return (
-    <div className="w-full max-w-5xl mx-auto">
+    <div className="w-full flex justify-center max-w-5xl mx-auto p-4">
       {loading ? (
-        <p>Ma'lumotlar yuklanmoqda...</p>
-      ) : chartdatas.length === 0 ? (
-        <p>Ma'lumotlar topilmadi yoki noto‘g‘ri!</p>
+        <p className="text-center text-gray-500">Ma'lumotlar yuklanmoqda...</p>
+      ) : datas.length === 0 ? (
+        <p className="text-center text-red-500">Ma'lumotlar topilmadi!</p>
       ) : (
-        <>
-          <div className="mb-8" style={{ width: "100%", height: 400 }}>
-            <ResponsiveContainer>
-              <RadarChart
-                cx="50%"
-                cy="50%"
-                outerRadius="70%"
-                data={chartdatas}
-              >
-                <PolarGrid stroke="#e2e8f0" />
-                <PolarAngleAxis
-                  dataKey="subject"
-                  tick={{ fill: "#1e293b", fontSize: 12 }}
-                  style={{ fontWeight: 500 }}
-                />
-                <PolarRadiusAxis
-                  angle={90}
-                  domain={[0, 100]}
-                  axisLine={false}
-                  tick={{ fontSize: 12 }}
-                />
-                <Radar
-                  dataKey="value"
-                  stroke="#2563eb"
-                  fill="#3b82f6"
-                  fillOpacity={0.4}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-            {chartdatas.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between gap-2 p-2"
-              >
-                <span>{item.subject}</span>
-                <span className="font-bold">{item.value}%</span>
-              </div>
-            ))}
-          </div>
-          <h2 className="text-2xl font-bold mt-12 mb-4">Психологик диагностика</h2>
-        </>
+        <div className="w-full mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 gap-y-10">
+          {datas.map((item, index) => (
+            <ProgressBar
+              key={index}
+              label={item.label}
+              value={item.percentage}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
 };
 
-export default RadarChartComponent;
+export default ProgressChart;

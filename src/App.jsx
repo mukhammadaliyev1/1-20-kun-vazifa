@@ -4,8 +4,6 @@ import Main from './components/Main'
 import Header from './components/Header'
 import Section from './components/Section'
 import ChartComponent from './components/Chartcomp'
-import ChartComponent1 from './components/Chartcomp1'
-import Chartcomp3 from './components/Chartcomp3'
 import Footercharts from './components/Footercharts'
 import qrcode from './assets/Frame 879.svg'
 
@@ -24,8 +22,7 @@ const App = () => {
 
 <div className='flex max-w-[1440px] items-center  mx-auto'>
 <ChartComponent/>
-{/* <Chartcomp3/>
-<ChartComponent1/> */}
+
 </div>
       <Section/>
 
